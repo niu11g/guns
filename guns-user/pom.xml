@@ -9,6 +9,7 @@
     <packaging>jar</packaging>
 
     <name>guns-user</name>
+
     <description>meeting院线系统用户模块</description>
 
     <parent>
