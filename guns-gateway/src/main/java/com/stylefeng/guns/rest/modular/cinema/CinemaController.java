@@ -2,7 +2,7 @@ package com.stylefeng.guns.rest.modular.cinema;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.cinema.CinemaAPI;
-import com.stylefeng.guns.rest.modular.cinema.vo.CinemaVO;
+import com.stylefeng.guns.api.cinema.vo.CinemaRequestVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,13 +17,13 @@ public class CinemaController {
 
     @RequestMapping(value="getCinemas",method = RequestMethod.GET)
     //查询影院列表
-    public ResponseVO getCinemas(CinemaVO cinemaVO){
+    public ResponseVO getCinemas(CinemaRequestVO cinemaVO){
 
         return null;
     }
     //获取影院列表
     @RequestMapping(value="getCondition",method=RequestMethod.GET)
-    public ResponseVO getCondition(CinemaVO cinemaVO){
+    public ResponseVO getCondition(CinemaRequestVO cinemaVO){
         return null;
     }
     //获取播放场次
