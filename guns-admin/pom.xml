@@ -5,8 +5,11 @@
     <parent>
         <groupId>com.stylefeng</groupId>
         <artifactId>guns-parent</artifactId>
+
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
+
+
     </parent>
 
     <artifactId>guns-admin</artifactId>

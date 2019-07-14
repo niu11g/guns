@@ -6,9 +6,9 @@ import java.io.Serializable;
 
 @Data
 public class CinemaVO implements Serializable {
-    private String uuid;
-    private String cinemaName;
-    private String address;
-    private String minimumPrice;
-
+   private int brandId;
+   private int hallType;
+   private int districtId;
+   private int pageSize;
+   private int nowPage;
 }
