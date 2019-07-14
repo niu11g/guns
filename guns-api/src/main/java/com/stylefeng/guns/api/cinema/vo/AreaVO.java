@@ -5,8 +5,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class BrandVO implements Serializable {
-    private int brandId;
-    private String brandName;
+public class AreaVO implements Serializable {
+    private int areaId;
+    private String areaName;
     private boolean isActive;
 }
