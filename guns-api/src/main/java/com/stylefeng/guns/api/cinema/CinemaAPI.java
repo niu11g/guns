@@ -3,7 +3,6 @@ package com.stylefeng.guns.api.cinema;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.vo.*;
-
 import java.util.List;
 
 public interface CinemaAPI {
