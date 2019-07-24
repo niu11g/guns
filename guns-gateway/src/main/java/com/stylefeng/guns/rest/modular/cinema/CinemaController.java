@@ -3,13 +3,15 @@ package com.stylefeng.guns.rest.modular.cinema;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaAPI;
-import com.stylefeng.guns.api.cinema.vo.CinemaRequestVO;
-import com.stylefeng.guns.api.cinema.vo.CinemaVO;
+import com.stylefeng.guns.api.cinema.vo.*;
+import com.stylefeng.guns.rest.modular.cinema.vo.CinemaConditionResponseVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -38,9 +40,23 @@ public class CinemaController {
         }
     }
     //获取影院列表
-    @RequestMapping(value="getCondition",method=RequestMethod.GET)
+    @RequestMapping(value="getCondition")
     public ResponseVO getCondition(CinemaRequestVO cinemaVO){
-        return null;
+        try {
+            List<BrandVO> brands = cinemaAPI.getBrands(cinemaVO.getBrandId());
+            List<AreaVO> areas = cinemaAPI.getAreas(cinemaVO.getDistrictId());
+            List<HallTypeVO> hallTypes = cinemaAPI.getHallTypes(cinemaVO.getHallType());
+
+            CinemaConditionResponseVO cinemaConditionResponseVO = new CinemaConditionResponseVO();
+            cinemaConditionResponseVO.setAreaList(areas);
+            cinemaConditionResponseVO.setBrandList(brands);
+            cinemaConditionResponseVO.setHalltypeList(hallTypes);
+
+            return ResponseVO.success(cinemaConditionResponseVO);
+        }catch (Exception e){
+            log.error("获取条件列表失败",e);
+            return ResponseVO.serviceFail("获取影院查询条件失败");
+        }
     }
     //获取播放场次
     @RequestMapping(value="getFields")
