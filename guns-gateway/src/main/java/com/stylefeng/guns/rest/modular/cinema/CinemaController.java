@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaAPI;
 import com.stylefeng.guns.api.cinema.vo.*;
 import com.stylefeng.guns.rest.modular.cinema.vo.CinemaConditionResponseVO;
+import com.stylefeng.guns.rest.modular.cinema.vo.CinemaFieldResponseVO;
+import com.stylefeng.guns.rest.modular.cinema.vo.CinemaFieldsResponseVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,8 @@ public class CinemaController {
 
     @Reference(interfaceClass = CinemaAPI.class,check=false)
     private CinemaAPI cinemaAPI;
+
+    private static final String IMG_PRE = "http://img.meetingshop.cn/";
 
     @RequestMapping(value="getCinemas")
     //查询影院列表
@@ -61,12 +65,41 @@ public class CinemaController {
     //获取播放场次
     @RequestMapping(value="getFields")
     public ResponseVO getFields(int cinemaId){
-        return null;
+        try{
+            CinemaInfoVO cinemaInfoById = cinemaAPI.getCinemaInfoById(cinemaId);
+
+            List<FilmInfoVO> filmInfoByCinemaId = cinemaAPI.getFilmInfoByCinemaId(cinemaId);
+
+            CinemaFieldResponseVO cinemaFieldResponseVO = new CinemaFieldResponseVO();
+            cinemaFieldResponseVO.setCinemaInfo(cinemaInfoById);
+            cinemaFieldResponseVO.setFilmList(filmInfoByCinemaId);
+
+            return ResponseVO.success(IMG_PRE,cinemaFieldResponseVO);
+
+        }catch(Exception e){
+            log.error("获取播放场次失败",e);
+            return ResponseVO.serviceFail("获取播放场次失败");
+        }
     }
     //获取场次详细信息
     @RequestMapping(value="getFieldInfo",method=RequestMethod.POST)
     public ResponseVO getFieldInfo(int cinemaId,int fieldId){
-        return null;
+        try{
+
+            CinemaInfoVO cinemaInfoById = cinemaAPI.getCinemaInfoById(cinemaId);
+            FilmInfoVO filmInfoByFieldId = cinemaAPI.getFilmInfoByFieldId(fieldId);
+            HallInfoVO filmFieldInfo = cinemaAPI.getFilmFieldInfo(fieldId);
+
+            CinemaFieldsResponseVO cinemaFieldsResponseVO = new CinemaFieldsResponseVO();
+            cinemaFieldsResponseVO.setCinemaInfo(cinemaInfoById);
+            cinemaFieldsResponseVO.setFilmInfo(filmInfoByFieldId);
+            cinemaFieldsResponseVO.setHallInfo(filmFieldInfo);
+
+            return ResponseVO.success(IMG_PRE,cinemaFieldsResponseVO);
+        }catch(Exception e){
+            log.error("获取播放场次失败");
+            return ResponseVO.serviceFail("获取播放场次失败");
+        }
     }
 
 
