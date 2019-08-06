@@ -17,7 +17,7 @@ public class FilmController {
 
     private static final String IMG_PRE = "http://img.meetingshop.cn/";
 
-    @Reference(interfaceClass = FilmAPI.class)
+    @Reference(interfaceClass = FilmAPI.class,check=false)
     private FilmAPI filmServiceApi;
 
     /*

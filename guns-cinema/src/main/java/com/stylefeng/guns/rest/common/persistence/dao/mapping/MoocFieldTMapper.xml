@@ -75,7 +75,7 @@
           info.actors AS actors,
           info.img_address AS imgAddress
         FROM
-          mooc_filed_t f,
+          mooc_field_t f,
           mooc_hall_film_info_t info
         where f.film_id = info.film_id
           AND f.UUID = ${fieldId}

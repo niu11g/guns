@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Service(interfaceClass = CinemaAPI.class)
+@Service(interfaceClass = CinemaAPI.class,loadbalance = "roundrobin",retries = -1)
 public class CinemaServiceImpl implements CinemaAPI {
 
     @Autowired
@@ -182,8 +182,8 @@ public class CinemaServiceImpl implements CinemaAPI {
     }
 
     @Override
-    public HallInfoVO getFilmFieldInfo(int fileldId) {
-        HallInfoVO hallInfoVO = moocFieldTMapper.getHallInfo(fileldId);
+    public HallInfoVO getFilmFieldInfo(int fieldId) {
+        HallInfoVO hallInfoVO = moocFieldTMapper.getHallInfo(fieldId);
         return hallInfoVO;
     }
 

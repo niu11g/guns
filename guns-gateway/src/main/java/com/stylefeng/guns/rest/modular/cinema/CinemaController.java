@@ -16,14 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
-@RestController
 @RequestMapping("/cinema/")
+@RestController
 public class CinemaController {
 
-    @Reference(interfaceClass = CinemaAPI.class,check=false)
+    private static final String IMG_PRE = "http://img.meetingshop.cn/";
+
+    @Reference(interfaceClass = CinemaAPI.class,check = false)
     private CinemaAPI cinemaAPI;
 
-    private static final String IMG_PRE = "http://img.meetingshop.cn/";
 
     @RequestMapping(value="getCinemas")
     //查询影院列表
@@ -90,6 +91,9 @@ public class CinemaController {
             FilmInfoVO filmInfoByFieldId = cinemaAPI.getFilmInfoByFieldId(fieldId);
             HallInfoVO filmFieldInfo = cinemaAPI.getFilmFieldInfo(fieldId);
 
+            //选几个销售的假数据，后续会对接订单接口
+            filmFieldInfo.setSoldSeats("1,2,3");
+
             CinemaFieldsResponseVO cinemaFieldsResponseVO = new CinemaFieldsResponseVO();
             cinemaFieldsResponseVO.setCinemaInfo(cinemaInfoById);
             cinemaFieldsResponseVO.setFilmInfo(filmInfoByFieldId);
@@ -97,8 +101,8 @@ public class CinemaController {
 
             return ResponseVO.success(IMG_PRE,cinemaFieldsResponseVO);
         }catch(Exception e){
-            log.error("获取播放场次失败");
-            return ResponseVO.serviceFail("获取播放场次失败");
+            log.error("获取选座信息失败");
+            return ResponseVO.serviceFail("获取选座信息失败");
         }
     }
 
