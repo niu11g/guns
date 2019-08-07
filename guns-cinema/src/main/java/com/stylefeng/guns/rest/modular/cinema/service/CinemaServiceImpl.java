@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Service(interfaceClass = CinemaAPI.class,loadbalance = "roundrobin",retries = -1)
+@Service(interfaceClass = CinemaAPI.class,loadbalance = "roundrobin",cache="lru",retries = -1)
 public class CinemaServiceImpl implements CinemaAPI {
 
     @Autowired
