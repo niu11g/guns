@@ -40,6 +40,7 @@ spring:
       protocol:
         name: dubbo
         port: 20885
+        accepts: 10
 logging:
   level.root: info
   level.com.stylefeng: debug

@@ -22,7 +22,7 @@ public class CinemaController {
 
     private static final String IMG_PRE = "http://img.meetingshop.cn/";
 
-    @Reference(interfaceClass = CinemaAPI.class,check = false)
+    @Reference(interfaceClass = CinemaAPI.class,connections = 10,check = false)
     private CinemaAPI cinemaAPI;
 
 
