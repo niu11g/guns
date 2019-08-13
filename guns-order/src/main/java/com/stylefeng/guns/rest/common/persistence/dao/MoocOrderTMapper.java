@@ -2,6 +2,7 @@ package com.stylefeng.guns.rest.common.persistence.dao;
 
 import com.stylefeng.guns.rest.common.persistence.model.MoocOrderT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -12,5 +13,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2019-08-11
  */
 public interface MoocOrderTMapper extends BaseMapper<MoocOrderT> {
+
+    String getSeatsByFieldId(@Param("fieldId") String fieldId);
 
 }
