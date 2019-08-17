@@ -3,21 +3,33 @@ package com.stylefeng.guns.rest.modular.order;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.stylefeng.guns.api.cinema.CinemaAPI;
+import com.stylefeng.guns.api.cinema.vo.FilmInfoVO;
+import com.stylefeng.guns.api.cinema.vo.OrderQueryVO;
 import com.stylefeng.guns.api.order.OrderAPI;
 import com.stylefeng.guns.api.order.vo.OrderInfoVO;
+import com.stylefeng.guns.core.util.UuidUtil;
 import com.stylefeng.guns.rest.common.persistence.dao.MoocOrderTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.MoocOrderT;
 import com.stylefeng.guns.rest.common.util.FTPUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
+@Slf4j
 @Component
 @Service(interfaceClass = OrderAPI.class)
 public class OrderAPIImpl implements OrderAPI {
 
     @Autowired
     private MoocOrderTMapper moocOrderTMapper;
+
+    @Autowired
+    private CinemaAPI cinemaAPI;
 
     @Autowired
     private FTPUtil ftpUtil;
@@ -74,8 +86,60 @@ public class OrderAPIImpl implements OrderAPI {
     }
     //创建订单信息
     @Override
-    public OrderInfoVO saveOrderInfo(Integer fieldId, String soldSeats, String seatsName, Integer userId) {
-        return null;
+    public OrderInfoVO saveOrderInfo(
+            Integer fieldId, String soldSeats, String seatsName, Integer userId) {
+        //编号--自动生成
+        String uuid = UuidUtil.genUuid();
+        //影片信息
+        FilmInfoVO filmInfoVO = cinemaAPI.getFilmInfoByFieldId(fieldId);
+        Integer filmId = Integer.parseInt(filmInfoVO.getFilmId());
+
+        //获取影院信息
+        OrderQueryVO orderQueryVO = cinemaAPI.getOrderNeeds(fieldId);
+        Integer cinemaId = Integer.parseInt(orderQueryVO.getCinemaId());
+        double filmPrice = Double.parseDouble(orderQueryVO.getFilmPrice());
+
+        //求订单总金额  //1,2,3,4,5
+        int solds = soldSeats.split(",").length;
+        double totalPrice = getTotalPrice(solds,filmPrice);
+
+        MoocOrderT moocOrderT = new MoocOrderT();
+        moocOrderT.setUuid(uuid);
+        moocOrderT.setSeatsName(seatsName);
+        moocOrderT.setSeatsIds(soldSeats);
+        moocOrderT.setOrderUser(userId);
+        moocOrderT.setOrderPrice(totalPrice);
+        moocOrderT.setFilmPrice(filmPrice);
+        moocOrderT.setFilmId(filmId);
+        moocOrderT.setFieldId(fieldId);
+        moocOrderT.setCinemaId(cinemaId);
+
+        Integer insert = moocOrderTMapper.insert(moocOrderT);
+        if(insert>0){
+            //返回查询结果
+            return null;
+        }else{
+            //插入出错
+            log.error("订单插入失败");
+            return null;
+        }
+    }
+
+    private static double getTotalPrice(int solds,double filmPrice){
+        BigDecimal soldsDeci = new BigDecimal(solds);
+        BigDecimal filmPriceDeci = new BigDecimal(filmPrice);
+
+        BigDecimal result = soldsDeci.multiply(filmPriceDeci);
+
+        BigDecimal bigDecimal = result.setScale(2, RoundingMode.HALF_UP);
+
+        return bigDecimal.doubleValue();
+    }
+
+    public static void main(String[] args){
+        double totalPrice = getTotalPrice(2,13.223423);
+
+
     }
     //使用当前登录人获取已经购买的订单
     @Override

@@ -192,4 +192,18 @@ public class CinemaServiceImpl implements CinemaAPI {
         FilmInfoVO filmInfoVO = moocFieldTMapper.getFilmInfoById(fieldId);
         return filmInfoVO;
     }
+
+    @Override
+    public OrderQueryVO getOrderNeeds(int fieldId) {
+
+        OrderQueryVO orderQueryVO = new OrderQueryVO();
+
+        MoocFieldT moocFieldT = moocFieldTMapper.selectById(fieldId);
+
+        orderQueryVO.setCinemaId(moocFieldT.getCinemaId()+"");
+        orderQueryVO.setFilmPrice(moocFieldT.getPrice()+"");
+
+        return orderQueryVO;
+    }
+
 }
