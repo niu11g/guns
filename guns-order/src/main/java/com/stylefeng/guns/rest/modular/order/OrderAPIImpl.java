@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -117,14 +118,19 @@ public class OrderAPIImpl implements OrderAPI {
         Integer insert = moocOrderTMapper.insert(moocOrderT);
         if(insert>0){
             //返回查询结果
-            return null;
+            OrderInfoVO orderInfoVO = moocOrderTMapper.getOrderInfoById(uuid);
+            if(orderInfoVO == null || orderInfoVO.getOrderId() == null){
+                log.error("订单信息查询失败，订单编号为{}",uuid);
+                return null;
+            }else{
+                return orderInfoVO;
+            }
         }else{
             //插入出错
             log.error("订单插入失败");
             return null;
         }
     }
-
     private static double getTotalPrice(int solds,double filmPrice){
         BigDecimal soldsDeci = new BigDecimal(solds);
         BigDecimal filmPriceDeci = new BigDecimal(filmPrice);
@@ -138,13 +144,22 @@ public class OrderAPIImpl implements OrderAPI {
 
     public static void main(String[] args){
         double totalPrice = getTotalPrice(2,13.223423);
-
-
     }
     //使用当前登录人获取已经购买的订单
     @Override
     public List<OrderInfoVO> getOrderByUserId(Integer userId) {
-        return null;
+
+        if(userId == null){
+            log.error("订单查询业务失败，用户编号未传入");
+            return null;
+        }else{
+            List<OrderInfoVO> orderInfoByUserId = moocOrderTMapper.getOrderInfoByUserId(userId);
+            if(orderInfoByUserId==null && orderInfoByUserId.size()==0){
+                return new ArrayList<>();
+            }else{
+                return orderInfoByUserId;
+            }
+        }
     }
     //根据FieldId 获取所有已经销售的座位编号
     @Override

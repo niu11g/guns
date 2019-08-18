@@ -27,5 +27,47 @@
           AND f.UUID = ${fieldId}
     </select>
 
+    <select id="getOrderInfoById" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.order.vo.OrderInfoVO">
+        Select
+           o.UUID AS orderId,
+           h.film_name AS filmName,
+           concat('今天 ',DATE_FORMAT(o.order_time,'%m月%d日'),' ',f.begin_time) AS fieldTime,
+           c.cinema_name AS cinemaName,
+           o.seats_name AS seatsName,
+           o.order_price AS orderPrice,
+           UNIX_TIMESTAMP(o.order_time) AS orderTimestamp
+        FROM
+          mooc_order_t o,
+          mooc_field_t f,
+          mooc_hall_film_info_t h,
+          mooc_cinema_t c
+        WHERE
+          o.cinema_id = c.UUID
+          AND o.field_id = f.UUID
+          AND o.film_id = h.film_id
+          AND o.UUID = ${ orderId }
+    </select>
+
+    <select id="getOrderInfoByUserId" parameterType="jjava.util.List" resultType="com.stylefeng.guns.api.order.vo.OrderInfoVO">
+        Select
+           o.UUID AS orderId,
+           h.film_name AS filmName,
+           concat(DATE_FORMAT(o.order_time,'%y年%m月%d日'),' ',f.begin_time) AS fieldTime,
+           c.cinema_name AS cinemaName,
+           o.seats_name AS seatsName,
+           o.order_price AS orderPrice,
+           UNIX_TIMESTAMP(o.order_time) AS orderTimestamp
+        FROM
+          mooc_order_t o,
+          mooc_field_t f,
+          mooc_hall_film_info_t h,
+          mooc_cinema_t c
+        WHERE
+          o.cinema_id = c.UUID
+          AND o.field_id = f.UUID
+          AND o.film_id = h.film_id
+          AND o.order_user = ${ userId }
+    </select>
+
 
 </mapper>

@@ -1,8 +1,11 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
+import com.stylefeng.guns.api.order.vo.OrderInfoVO;
 import com.stylefeng.guns.rest.common.persistence.model.MoocOrderT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,5 +18,9 @@ import org.apache.ibatis.annotations.Param;
 public interface MoocOrderTMapper extends BaseMapper<MoocOrderT> {
 
     String getSeatsByFieldId(@Param("fieldId") String fieldId);
+
+    OrderInfoVO getOrderInfoById(@Param("orderId") String orderId);
+
+    List<OrderInfoVO> getOrderInfoByUserId(@Param("userId") Integer userId);
 
 }
