@@ -164,6 +164,12 @@ public class OrderAPIImpl implements OrderAPI {
     //根据FieldId 获取所有已经销售的座位编号
     @Override
     public String getSoldSeatsByFieldId(Integer fieldId) {
-        return null;
+        if(fieldId == null){
+            log.error("查询已售座位错误，未传入任何场次编号");
+            return "";
+        }else{
+            String soldSeatsByFieldId = moocOrderTMapper.getSoldSeatsByFieldId(fieldId);
+            return soldSeatsByFieldId;
+        }
     }
 }
