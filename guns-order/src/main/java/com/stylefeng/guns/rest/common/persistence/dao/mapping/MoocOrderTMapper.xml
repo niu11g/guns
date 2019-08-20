@@ -48,7 +48,7 @@
           AND o.UUID = ${ orderId }
     </select>
 
-    <select id="getOrderInfoByUserId" parameterType="jjava.util.List" resultType="com.stylefeng.guns.api.order.vo.OrderInfoVO">
+    <select id="getOrderInfoByUserId" parameterType="java.util.List" resultType="com.stylefeng.guns.api.order.vo.OrderInfoVO">
         Select
            o.UUID AS orderId,
            h.film_name AS filmName,
