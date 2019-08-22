@@ -17,6 +17,10 @@ import java.io.InputStreamReader;
 public class FTPUtil {
 
     //地址 端口 用户名 密码
+//    private String hostName = "192.168.0.102";
+//    private Integer port = 2100;
+//    private String userName = "ftp";
+//    private String password = "ftp123";
     private String hostName;
     private Integer port;
     private String userName;
@@ -67,6 +71,8 @@ public class FTPUtil {
 
     public static void main(String[] args){
         FTPUtil ftpUtil = new FTPUtil();
+//        ftpUtil.initFTPClient();
+//        log.info(ftpUtil.getFileStrByAddress("seats/cgs.json"));
 
     }
 

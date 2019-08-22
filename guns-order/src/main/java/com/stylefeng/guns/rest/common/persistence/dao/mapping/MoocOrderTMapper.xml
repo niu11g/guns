@@ -45,10 +45,10 @@
           o.cinema_id = c.UUID
           AND o.field_id = f.UUID
           AND o.film_id = h.film_id
-          AND o.UUID = ${ orderId }
+          AND o.UUID = #{ orderId }
     </select>
 
-    <select id="getOrderInfoByUserId" parameterType="java.util.List" resultType="com.stylefeng.guns.api.order.vo.OrderInfoVO">
+    <select id="getOrderInfoByUserId" parameterType="java.lang.Integer" resultType="com.stylefeng.guns.api.order.vo.OrderInfoVO">
         Select
            o.UUID AS orderId,
            h.film_name AS filmName,
