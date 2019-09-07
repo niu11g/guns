@@ -25,7 +25,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Service(interfaceClass = OrderAPI.class)
+@Service(interfaceClass = OrderAPI.class,group = "default")
 public class OrderAPIImpl implements OrderAPI {
 
     @Autowired
@@ -180,6 +180,40 @@ public class OrderAPIImpl implements OrderAPI {
         }else{
             String soldSeatsByFieldId = moocOrderTMapper.getSoldSeatsByFieldId(fieldId);
             return soldSeatsByFieldId;
+        }
+    }
+
+    @Override
+    public OrderInfoVO getOrderInfoById(String orderId) {
+
+
+        OrderInfoVO orderInfoById = moocOrderTMapper.getOrderInfoById(orderId);
+        return orderInfoById;
+    }
+
+    @Override
+    public boolean paySuccess(String orderId) {
+        MoocOrderT moocOrderT = new MoocOrderT();
+        moocOrderT.setUuid(orderId);
+        moocOrderT.setOrderStatus(1);
+        Integer integer = moocOrderTMapper.updateById(moocOrderT);
+        if(integer>=1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean payFail(String orderId) {
+        MoocOrderT moocOrderT = new MoocOrderT();
+        moocOrderT.setUuid(orderId);
+        moocOrderT.setOrderStatus(2);
+        Integer integer = moocOrderTMapper.updateById(moocOrderT);
+        if(integer>=1){
+            return true;
+        }else{
+            return false;
         }
     }
 }
