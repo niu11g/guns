@@ -10,6 +10,7 @@ import com.stylefeng.guns.api.alipay.vo.AliPayInfoVO;
 import com.stylefeng.guns.api.alipay.vo.AliPayResultVO;
 import com.stylefeng.guns.api.order.OrderAPI;
 import com.stylefeng.guns.api.order.vo.OrderInfoVO;
+import com.stylefeng.guns.rest.common.util.FTPUtil;
 import com.stylefeng.guns.rest.modular.alipay.config.Configs;
 import com.stylefeng.guns.rest.modular.alipay.model.ExtendParams;
 import com.stylefeng.guns.rest.modular.alipay.model.GoodsDetail;
@@ -23,18 +24,24 @@ import com.stylefeng.guns.rest.modular.alipay.service.impl.AlipayTradeWithHBServ
 import com.stylefeng.guns.rest.modular.alipay.utils.Utils;
 import com.stylefeng.guns.rest.modular.alipay.utils.ZxingUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Component
-@Service(interfaceClass = AliPayServiceAPI.class)
+@Service(interfaceClass = AliPayServiceAPI.class,mock="com.stylefeng.guns.api.alipay.AliPayServiceMock")
 public class AliPayServiceImpl implements AliPayServiceAPI {
 
     @Reference(interfaceClass = OrderAPI.class,check=false,group="default")
     private OrderAPI orderAPI;
+
+    @Autowired
+    private FTPUtil ftpUtil;
+
 
     // 支付宝当面付2.0服务
     private static AlipayTradeService   tradeService;
@@ -162,8 +169,14 @@ public class AliPayServiceImpl implements AliPayServiceAPI {
                 // 需要修改为运行机器上的路径
                 filePath = String.format("C:/Users/Administrator/Desktop/仿猫眼项目/支付模块/qrcode/qr-%s.png",
                         response.getOutTradeNo());
+                String fileName = String.format("qr-%s.png",response.getOutTradeNo());
                 log.info("filePath:" + filePath);
-                ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);
+                File qrCodeImge = ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);
+                boolean isSuccess = ftpUtil.uploadFile(fileName,qrCodeImge);
+                if(!isSuccess){
+                    filePath = "";
+                    log.error("二维码上传失败");
+                }
                 break;
             case FAILED:
                 log.error("支付宝预下单失败!!!");
